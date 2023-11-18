@@ -19,10 +19,11 @@ const registerUser = asyncHandlers(async (req, res) => {
     password,
   });
   if (user) {
-    res.status(201).json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      medicine: user.medicine,
       token: generateToken(user._id),
     });
   } else {
@@ -35,7 +36,7 @@ const authUser = asyncHandlers(async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user && (await user.matchPassword(password))) {
-    res.json({
+    res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
@@ -47,4 +48,50 @@ const authUser = asyncHandlers(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+// const addMedicine = () => {};
+
+const addMedicine = asyncHandlers(async (req, res) => {
+  const { id, newMedicine } = req.body;
+  if (!id) {
+    res.status(401);
+    throw new Error("Authentication Expired!");
+  }
+  if (!newMedicine) {
+    res.status(400);
+    throw new Error("Please input all the Medicine Details!");
+  }
+  try {
+    let user = await User.findById(id);
+    if (user) {
+      const index = user.medicine.findIndex(
+        (m) => m.medName === newMedicine.medName
+      );
+      if (index === -1 || user.medicine.length === 0) {
+        const newMedicineList = user.medicine;
+        newMedicineList.push(newMedicine);
+        user = await User.findOneAndUpdate(
+          { _id: id },
+          { $set: { medicine: newMedicineList } },
+          { new: true }
+        );
+        res.status(200).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          medicine: user.medicine,
+        });
+      } else {
+        res.status(400);
+        throw new Error("Medicine Already Added!");
+      }
+    } else {
+      res.status(400);
+      throw new Error("User not Found!");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+module.exports = { registerUser, authUser, addMedicine };

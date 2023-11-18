@@ -6,6 +6,13 @@ const userSchema = mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    medicine: [
+      {
+        medName: { type: String, required: true },
+        dosage: { type: Number, required: true },
+        time: [{ type: Date, required: true }],
+      },
+    ],
   },
   { timestamp: true }
 );
