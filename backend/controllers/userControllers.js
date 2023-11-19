@@ -17,12 +17,14 @@ const registerUser = asyncHandlers(async (req, res) => {
     name,
     email,
     password,
+    gender,
   });
   if (user) {
     res.status(200).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      gender: user.gender,
       medicine: user.medicine,
       token: generateToken(user._id),
     });
@@ -40,6 +42,7 @@ const authUser = asyncHandlers(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      gender: user.gender,
       token: generateToken(user._id),
     });
   } else {
@@ -76,6 +79,7 @@ const addMedicine = asyncHandlers(async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           medicine: user.medicine,
         });
       } else {
@@ -83,6 +87,7 @@ const addMedicine = asyncHandlers(async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           medicine: user.medicine,
         });
       }
@@ -122,6 +127,7 @@ const removeMedicine = asyncHandlers(async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           medicine: user.medicine,
         });
       } else {
@@ -168,6 +174,7 @@ const updateMedicine = asyncHandlers(async (req, res) => {
           _id: user._id,
           name: user.name,
           email: user.email,
+          gender: user.gender,
           medicine: user.medicine,
         });
       } else {
