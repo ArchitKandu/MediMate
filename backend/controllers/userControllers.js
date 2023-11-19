@@ -3,8 +3,8 @@ const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 
 const registerUser = asyncHandlers(async (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password) {
+  const { name, email, password, gender } = req.body;
+  if (!name || !email || !password || !gender) {
     res.status(400);
     throw new Error("Please Enter All Required Details");
   }
