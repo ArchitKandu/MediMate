@@ -48,8 +48,6 @@ const authUser = asyncHandlers(async (req, res) => {
   }
 });
 
-// const addMedicine = () => {};
-
 const addMedicine = asyncHandlers(async (req, res) => {
   const { id, newMedicine } = req.body;
   if (!id) {
@@ -81,8 +79,12 @@ const addMedicine = asyncHandlers(async (req, res) => {
           medicine: user.medicine,
         });
       } else {
-        res.status(400);
-        throw new Error("Medicine Already Added!");
+        res.status(202).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          medicine: user.medicine,
+        });
       }
     } else {
       res.status(400);
@@ -94,4 +96,98 @@ const addMedicine = asyncHandlers(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser, addMedicine };
+const removeMedicine = asyncHandlers(async (req, res) => {
+  const { id, medId } = req.body;
+  if (!id) {
+    res.status(401);
+    throw new Error("Authentication Expired!");
+  }
+  if (!medId) {
+    res.status(400);
+    throw new Error("Please Select an Medicine!");
+  }
+  try {
+    let user = await User.findById(id);
+    if (user) {
+      const index = user.medicine.findIndex((m) => m._id == medId);
+      if (index !== -1) {
+        const newMedicineList = user.medicine;
+        newMedicineList.splice(index, 1);
+        user = await User.findOneAndUpdate(
+          { _id: id },
+          { $set: { medicine: newMedicineList } },
+          { new: true }
+        );
+        res.status(200).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          medicine: user.medicine,
+        });
+      } else {
+        res.status(400);
+        throw new Error("Medicine not Found!");
+      }
+    } else {
+      res.status(400);
+      throw new Error("User not Found!");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+const updateMedicine = asyncHandlers(async (req, res) => {
+  const { id, medId, updatedMedValue } = req.body;
+  if (!id) {
+    res.status(401);
+    throw new Error("Authentication Expired!");
+  }
+  if (!medId) {
+    res.status(400);
+    throw new Error("Please Select an Medicine!");
+  }
+  if (!updatedMedValue) {
+    res.status(400);
+    throw new Error("No Data Found");
+  }
+  try {
+    let user = await User.findById(id);
+    if (user) {
+      const index = user.medicine.findIndex((m) => m._id == medId);
+      if (index !== -1) {
+        const newMedicineList = user.medicine;
+        newMedicineList[index] = updatedMedValue;
+        user = await User.findOneAndUpdate(
+          { _id: id },
+          { $set: { medicine: newMedicineList } },
+          { new: true }
+        );
+        res.status(200).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          medicine: user.medicine,
+        });
+      } else {
+        res.status(400);
+        throw new Error("Medicine not Found!");
+      }
+    } else {
+      res.status(400);
+      throw new Error("User not Found!");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
+module.exports = {
+  registerUser,
+  authUser,
+  addMedicine,
+  removeMedicine,
+  updateMedicine,
+};
