@@ -191,10 +191,37 @@ const updateMedicine = asyncHandlers(async (req, res) => {
   }
 });
 
+const getMedicine = asyncHandlers(async (req, res) => {
+  const { id } = req.body;
+  if (!id) {
+    res.status(401);
+    throw new Error("Authenticate First");
+  }
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      const medicine1 = user.medicine[0];
+      const medicine2 = user.medicine[1];
+      res.status(200).json({
+        _id: user._id,
+        medicine1: medicine1,
+        medicine2: medicine2,
+      });
+    } else {
+      res.status(400);
+      throw new Error("User Not found");
+    }
+  } catch (error) {
+    res.status(400);
+    throw new Error(error.message);
+  }
+});
+
 module.exports = {
   registerUser,
   authUser,
   addMedicine,
   removeMedicine,
   updateMedicine,
+  getMedicine,
 };
