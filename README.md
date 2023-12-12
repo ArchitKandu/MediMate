@@ -5,6 +5,7 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
+- [Demo](#demo)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -22,6 +23,14 @@
 ## Introduction
 
 Medimate is a medication management system designed to help users keep track of their medications and receive timely reminders for doses.
+
+## Demo
+
+A demo video for the end project is shown below.
+<video controls title="demo" muted>
+
+  <source src="demo/demo.mp4" type="video/mp4">
+</video>
 
 ## Getting Started
 
