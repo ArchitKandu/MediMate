@@ -27,10 +27,7 @@ Medimate is a medication management system designed to help users keep track of 
 ## Demo
 
 A demo video for the end project is shown below.
-<video controls title="demo" muted>
-
-  <source src="demo/demo.mp4" type="video/mp4">
-</video>
+<video controls title="demo-video" muted src="demo/demo.mp4"></video>
 
 ## Getting Started
 
